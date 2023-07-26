@@ -1,5 +1,7 @@
-import { GetStaticProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
+import { useRouter } from "next/router";
 import Image from "next/image";
+
 import {
   ImageContainer,
   ProductContainer,
@@ -20,6 +22,12 @@ interface ProductProps {
 }
 
 export default function Product({ product }: ProductProps) {
+  const { isFallback } = useRouter()
+
+  if(isFallback) {
+    return <p>Loading...</p>
+  }
+
   return (
     <ProductContainer>
       <ImageContainer>
@@ -34,6 +42,17 @@ export default function Product({ product }: ProductProps) {
       </ProductDetails>
     </ProductContainer>
   );
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  // buscar os produtos mais vendidos / mais acessados
+
+  return {
+    paths: [
+      { params : { id: 'prod_OIwQQ9XAzPaXGg'}}
+    ],
+    fallback: true,
+  }
 }
 
 export const getStaticProps: GetStaticProps<any, { id: string }> = async ({ params }) => {
