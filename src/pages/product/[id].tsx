@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { useRouter } from "next/router";
 import Image from "next/image";
+import axios from "axios";
 
 import {
   ImageContainer,
@@ -17,15 +18,30 @@ interface ProductProps {
     name: string;
     imageUrl: string;
     price: string;
-    descrition: string;
+    description: string;
+    defaultPriceId: string;
   }
 }
 
-export default function Product({ product }: ProductProps) {
-  const { isFallback } = useRouter()
+export default function Product({ product }: ProductProps) {  
+  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] = useState(false)
 
-  if(isFallback) {
-    return <p>Loading...</p>
+  async function handleBuyProduct() {
+    try {
+      setIsCreatingCheckoutSession(true)
+
+      const response = await axios.post('/api/checkout', {
+        priceId: product.defaultPriceId,
+      })
+
+      const { checkoutUrl } = response.data
+      window.location.href = checkoutUrl
+
+    } catch (err) {
+      // Conectar  com uma ferramenta de observabilidade (Datadog / Sentry)
+      setIsCreatingCheckoutSession(false)
+      alert('Falha ao redirecionar ao checkout!')
+    }
   }
 
   return (
@@ -37,8 +53,10 @@ export default function Product({ product }: ProductProps) {
       <ProductDetails>
         <h1>{product.name}</h1>
         <span>{product.price}</span>
-        <p>{product.descrition}</p>
-        <button>Comprar agora</button>
+        <p>{product.description}</p>
+        <button disabled={isCreatingCheckoutSession} onClick={handleBuyProduct}>
+          Comprar agora
+        </button>
       </ProductDetails>
     </ProductContainer>
   );
@@ -51,7 +69,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     paths: [
       { params : { id: 'prod_OIwQQ9XAzPaXGg'}}
     ],
-    fallback: true,
+    fallback: 'blocking',
   }
 }
 
@@ -75,6 +93,7 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({ para
           currency: "BRL",
         }).format(price.unit_amount / 100),
         description: product.description,
+        defaultPriceId: price.id,
       }
     },
     revalidate: 60 * 60 * 1, // 1 hour
