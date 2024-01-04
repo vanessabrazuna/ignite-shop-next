@@ -1,3 +1,9 @@
+<h1 align="center"> Ignite Shop </h1>
+
+<p align="center">
+  <img alt="Ignite Shop" src="https://github-production-user-asset-6210df.s3.amazonaws.com/73675022/294183233-9b836288-78dd-4906-ad9c-ed76fe164e64.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240104%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240104T125532Z&X-Amz-Expires=300&X-Amz-Signature=828219026df9166e5b6aba7078909efc87df099f6b843bb2c93fd6e78faa5200&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=0" width="100%">
+</p>
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
